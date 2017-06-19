@@ -1,4 +1,4 @@
-# Basic Approximate Bayseian Computation
+ # Basic Approximate Bayesian Computation
 # Rohitash Chandra and Sally Cripps (2017).
 # CTDS, UniSYD. c.rohitash@gmail.com
 # Simulated data is used.
@@ -30,6 +30,7 @@ def sampler(samples, nModels, x, ydata):
     pos_sig = np.ones((portionaccept , (nModels)))
     pos_w = np.ones((portionaccept , (nModels)))
     pos_tau = np.ones(portionaccept )
+    pos_mse =   np.ones(portionaccept ) # not needed but just in case
     pos_fx = np.ones((portionaccept , ydata.size))
 
     #create space to store fx of all samples
@@ -58,16 +59,16 @@ def sampler(samples, nModels, x, ydata):
        diff[h,: ] = np.square(ygen[h,: ] - ydata)
        mse[h] =  np.sqrt( np.sum(diff[h,:])/x.size) # get mean squred error
 
-       if mse[h] < epsilon: # define how you accept 
+       if mse[h] < epsilon: # define how you accept
           pos_mu[k,:] = mu_current[h,:]
           pos_sig[k,:] = sig_current[h,:]
           pos_w[k,:] = w_current[h,:]
           pos_tau[k] = tau_current[h]
           pos_fx[k,:] = fx_samples[h,: ]
+          pos_mse[k] = mse[h]
           k = k+1
 
     pos_fx_ = pos_fx[0:int(k),]
-    mse_ = mse[0:int(k)]
 
     print k,  'is number accepted'
 
@@ -99,7 +100,7 @@ def sampler(samples, nModels, x, ydata):
     plt.savefig('results/abcres.png')
     plt.clf()
 
-    return (mse_, pos_fx_, k)
+    return (pos_mse, pos_fx_, k)
 
 
 def main():
