@@ -1,4 +1,4 @@
- # Basic Approximate Bayesian Computation
+# Basic Approximate Bayesian Computation
 # Rohitash Chandra and Sally Cripps (2017).
 # CTDS, UniSYD. c.rohitash@gmail.com
 # Simulated data is used.
@@ -69,6 +69,7 @@ def sampler(samples, nModels, x, ydata):
           k = k+1
 
     pos_fx_ = pos_fx[0:int(k),]
+    pos_mse_ = pos_mse[0:int(k),]
 
     print k,  'is number accepted'
 
@@ -100,7 +101,7 @@ def sampler(samples, nModels, x, ydata):
     plt.savefig('results/abcres.png')
     plt.clf()
 
-    return (pos_mse, pos_fx_, k)
+    return (pos_mse_, pos_fx_, k)
 
 
 def main():
@@ -116,11 +117,11 @@ def main():
         print ydata.size
         x = np.linspace(1/ydata.size, 1, num=ydata.size) #   (  input x for ydata)
 
-        NumSamples = 2000000   # need to pick yourself
+        NumSamples = 2000000  # need to pick yourself
 
-	[mse, pos_fx, k] = sampler(NumSamples, nModels, x, ydata)
+	[pos_mse, pos_fx, k] = sampler(NumSamples, nModels, x, ydata)
     	print 'mse and posterior fx of accepted samples'
-    	print mse
+    	print pos_mse
     	print pos_fx
 
 
